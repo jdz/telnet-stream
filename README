@@ -1,0 +1,19 @@
+# -*- mode: org; -*-
+
+Extended stream class that handles Telnet commands.  For now SBCL
+specific.
+
+* Future
+** TODO Proper option negotiation
+
+See http://www.ietf.org/rfc/rfc1143.txt.
+
+** TODO Implementation of Go Ahead command
+** TODO Non-ASCII support
+
+At least need to escape IACs.
+
+** TODO Other telnet command implementations
+
+Currently only WILL, WON'T, DO and DON'T are handled.
+
