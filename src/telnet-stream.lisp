@@ -1,5 +1,13 @@
 (in-package #:telnet-stream)
 
+(define-condition read-timeout (serious-condition)
+  ((stream
+    :initarg :stream
+    :reader read-timeout-stream))
+  (:report (lambda (condition stream)
+             (format stream "Timeout while waiting for input on ~S"
+                     (read-timeout-stream condition)))))
+
 (defgeneric process-iac (stream command option))
 (defgeneric send-iac (stream command option))
 
@@ -9,7 +17,7 @@
     :initarg :socket
     :reader telnet-stream-socket)
    (input-buffer
-    :initform (make-array 4096 :element-type '(unsigned-byte 8))
+    :initform (make-array 256 :element-type '(unsigned-byte 8))
     :reader input-buffer
     :type (simple-array (unsigned-byte 8) (*)))
    (input-buffer-index
@@ -117,11 +125,15 @@
                      (timeout timeout))
         stream
       (when timeout
-        (unless (unix-simple-poll (socket-file-descriptor socket)
-                                  :input
-                                  (truncate (* timeout 1000)))
-          ;; XXX: We should actually signal a timeout error.
-          (return-from fill-input-buffer nil)))
+        (loop
+          (cond ((unix-simple-poll (socket-file-descriptor socket)
+                                   :input
+                                   (truncate (* timeout 1000)))
+                 (return))
+                (t
+                 (cerror "Wait another ~D seconds."
+                         (make-condition 'read-timeout :stream stream)
+                         timeout)))))
 
       (multiple-value-bind (buf len peer)
           (socket-receive (telnet-stream-socket stream)

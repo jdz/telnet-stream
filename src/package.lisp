@@ -6,4 +6,7 @@
   (:export #:telnet-stream
            #:telnet-stream-socket
            #:process-iac
-           #:send-iac))
+           #:send-iac
+
+           #:read-timeout
+           #:read-timeout-stream))
