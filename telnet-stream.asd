@@ -5,7 +5,7 @@
   :license "n/a"
   :long-description "Extended stream class that handles Telnet
   commands.  For now SBCL specific."
-  :depends-on ()
+  :depends-on ((:require "sb-bsd-sockets"))
   :components ((:module "src"
                 :serial t
                 :components ((:file "package")
