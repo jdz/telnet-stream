@@ -2,7 +2,7 @@
   :description "Telnet stream"
   :author "Janis Dzerins <janis.dzerins@cert.lv>"
   :version "0.1"
-  :license "n/a"
+  :licence "MIT"
   :long-description "Extended stream class that handles Telnet
   commands.  For now SBCL specific."
   :depends-on ((:require "sb-bsd-sockets"))
